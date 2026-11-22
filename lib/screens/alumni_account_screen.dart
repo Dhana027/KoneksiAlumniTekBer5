@@ -1,4 +1,4 @@
-import 'package:material_ui/material_ui.dart';
+import 'package:flutter/material.dart';
 import '../models/alumni_account_summary.dart';
 import '../models/alumni_personal_info.dart';
 import '../theme/app_colors.dart';
