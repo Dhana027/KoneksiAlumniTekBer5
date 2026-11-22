@@ -1,3 +1,67 @@
+begin;
+
+create table public.departments (
+  code text primary key,
+  name text not null unique
+);
+
+insert into public.departments (code, name)
+values ('SI', 'Sistem Informasi');
+
+create table public.profiles (
+  id uuid primary key references auth.users(id) on delete cascade,
+  full_name text not null default '',
+  account_type text not null default 'mahasiswa'
+    check (account_type in ('mahasiswa', 'alumni')),
+  nrp text unique,
+  department_code text references public.departments(code) on delete set null,
+  entry_year smallint check (entry_year between 1950 and 2100),
+  graduation_year smallint check (graduation_year between 1950 and 2100),
+  phone text,
+  city text,
+  bio text,
+  company text,
+  job_title text,
+  created_at timestamptz not null default now(),
+  check (graduation_year is null or entry_year is null
+    or graduation_year >= entry_year)
+);
+
+create index profiles_department_idx on public.profiles(department_code);
+
+create table public.cv_documents (
+  user_id uuid primary key default auth.uid()
+    references public.profiles(id) on delete cascade,
+  file_name text not null check (btrim(file_name) <> ''),
+  storage_path text not null unique,
+  file_size bigint check (file_size between 1 and 10485760),
+  created_at timestamptz not null default now(),
+  check (split_part(storage_path, '/', 1) = user_id::text
+    and storage_path not like '%/' and position('/' in storage_path) > 0)
+);
+
+create function public.koneksi_create_profile()
+returns trigger language plpgsql security definer set search_path = ''
+as $$
+begin
+  insert into public.profiles (id, full_name, account_type)
+  values (
+    new.id,
+    coalesce(new.raw_user_meta_data ->> 'full_name', ''),
+    case when new.raw_user_meta_data ->> 'account_type' = 'alumni'
+      then 'alumni' else 'mahasiswa' end
+  );
+  return new;
+end;
+$$;
+
+revoke all on function public.koneksi_create_profile()
+from public, anon, authenticated;
+
+create trigger koneksi_on_auth_user_created
+after insert on auth.users
+for each row execute function public.koneksi_create_profile();
+
 insert into public.profiles (id, full_name, account_type)
 select id, coalesce(raw_user_meta_data ->> 'full_name', ''),
   case when raw_user_meta_data ->> 'account_type' = 'alumni'
