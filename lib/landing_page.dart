@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'screens/direktori_alumni_screen.dart';
+
 const Color primaryTeal = Color(0xFF087D95);
 const Color darkTeal = Color(0xFF075766);
 const Color lightBlue = Color(0xFFEAF4F7);
@@ -28,7 +30,7 @@ class LandingPage extends StatelessWidget {
                     const SizedBox(height: 20),
                     _campusImage(),
                     const SizedBox(height: 24),
-                    _features(),
+                    _features(context),
                     const SizedBox(height: 18),
                     _metrics(),
                     const SizedBox(height: 24),
@@ -47,24 +49,26 @@ class LandingPage extends StatelessWidget {
     );
   }
 
-  // ================= HEADER =================
+  // HEADER
 
   Widget _header(BuildContext context) {
     return Container(
       height: 60,
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: const BoxDecoration(
-        border: Border(bottom: BorderSide(color: dividerColor)),
+        border: Border(
+          bottom: BorderSide(color: dividerColor),
+        ),
       ),
       child: Row(
         children: [
           _logoMark(),
           const SizedBox(width: 8),
-          Expanded(
+          const Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children: [
                 Text(
                   'KonekSI Alumni',
                   style: TextStyle(
@@ -124,7 +128,7 @@ class LandingPage extends StatelessWidget {
     );
   }
 
-  // ================= HERO =================
+  // HERO
 
   Widget _hero(BuildContext context) {
     return Column(
@@ -132,7 +136,10 @@ class LandingPage extends StatelessWidget {
       children: [
         Center(
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 9,
+              vertical: 6,
+            ),
             decoration: BoxDecoration(
               color: lightBlue,
               borderRadius: BorderRadius.circular(30),
@@ -195,7 +202,10 @@ class LandingPage extends StatelessWidget {
             ),
             child: const Text(
               'Masuk Portal',
-              style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600),
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
         ),
@@ -213,7 +223,10 @@ class LandingPage extends StatelessWidget {
             ),
             child: const Text(
               'Daftar Akun Baru',
-              style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600),
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
         ),
@@ -221,7 +234,7 @@ class LandingPage extends StatelessWidget {
     );
   }
 
-  // ================= CAMPUS IMAGE =================
+  // CAMPUS IMAGE
 
   Widget _campusImage() {
     return Container(
@@ -234,11 +247,13 @@ class LandingPage extends StatelessWidget {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          // Placeholder until ITS photo asset is added
           Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
-                colors: [Color(0xFFB8DDE8), Color(0xFF518B9C)],
+                colors: [
+                  Color(0xFFB8DDE8),
+                  Color(0xFF518B9C),
+                ],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
               ),
@@ -253,14 +268,20 @@ class LandingPage extends StatelessWidget {
             left: 12,
             bottom: 10,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 10,
+                vertical: 6,
+              ),
               decoration: BoxDecoration(
                 color: Colors.black54,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: const Text(
                 'Institut Teknologi Sepuluh Nopember',
-                style: TextStyle(color: Colors.white, fontSize: 9),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 9,
+                ),
               ),
             ),
           ),
@@ -269,9 +290,9 @@ class LandingPage extends StatelessWidget {
     );
   }
 
-  // ================= FEATURES =================
+  // FEATURES
 
-  Widget _features() {
+  Widget _features(BuildContext context) {
     final items = [
       (
         Icons.groups_outlined,
@@ -315,17 +336,33 @@ class LandingPage extends StatelessWidget {
         const Text(
           'Fitur utama untuk mempercepat koneksi dan karier.',
           textAlign: TextAlign.center,
-          style: TextStyle(color: secondaryText, fontSize: 11),
+          style: TextStyle(
+            color: secondaryText,
+            fontSize: 11,
+          ),
         ),
         const SizedBox(height: 14),
         ...items.map(
           (item) => Padding(
             padding: const EdgeInsets.only(bottom: 9),
-            child: _featureCard(
-              icon: item.$1,
-              title: item.$2,
-              description: item.$3,
-              color: item.$4,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(12),
+              onTap: item.$2 == 'Direktori Alumni'
+                  ? () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (_) =>
+                              const DirektoriAlumniScreen(),
+                        ),
+                      );
+                    }
+                  : null,
+              child: _featureCard(
+                icon: item.$1,
+                title: item.$2,
+                description: item.$3,
+                color: item.$4,
+              ),
             ),
           ),
         ),
@@ -356,7 +393,11 @@ class LandingPage extends StatelessWidget {
               color: color.withOpacity(0.09),
               borderRadius: BorderRadius.circular(9),
             ),
-            child: Icon(icon, color: color, size: 17),
+            child: Icon(
+              icon,
+              color: color,
+              size: 17,
+            ),
           ),
           const SizedBox(width: 10),
           Expanded(
@@ -388,7 +429,7 @@ class LandingPage extends StatelessWidget {
     );
   }
 
-  // ================= METRICS =================
+  // METRICS
 
   Widget _metrics() {
     return Container(
@@ -397,10 +438,10 @@ class LandingPage extends StatelessWidget {
         color: const Color(0xFF17313E),
         borderRadius: BorderRadius.circular(16),
       ),
-      child: Column(
+      child: const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'REAL-TIME PORTAL METRICS',
             style: TextStyle(
               fontSize: 8,
@@ -409,8 +450,8 @@ class LandingPage extends StatelessWidget {
               color: Color(0xFF70D9E8),
             ),
           ),
-          const SizedBox(height: 8),
-          const Text(
+          SizedBox(height: 8),
+          Text(
             'Kekuatan Jejaring Alumni Riil',
             style: TextStyle(
               color: Colors.white,
@@ -418,8 +459,8 @@ class LandingPage extends StatelessWidget {
               fontWeight: FontWeight.w800,
             ),
           ),
-          const SizedBox(height: 7),
-          const Text(
+          SizedBox(height: 7),
+          Text(
             'KonekSI mempercepat proses lamaran kerja dan '
             'memberi bimbingan berbasis pengalaman nyata.',
             style: TextStyle(
@@ -428,12 +469,18 @@ class LandingPage extends StatelessWidget {
               height: 1.5,
             ),
           ),
-          const SizedBox(height: 15),
-          const Row(
+          SizedBox(height: 15),
+          Row(
             children: [
-              Expanded(child: _Metric('450+', 'Alumni\nTergabung')),
-              Expanded(child: _Metric('20+', 'Mentor\nTerpilih')),
-              Expanded(child: _Metric('100%', 'Akademis\nTerpercaya')),
+              Expanded(
+                child: _Metric('450+', 'Alumni\nTergabung'),
+              ),
+              Expanded(
+                child: _Metric('20+', 'Mentor\nTerpilih'),
+              ),
+              Expanded(
+                child: _Metric('100%', 'Akademis\nTerpercaya'),
+              ),
             ],
           ),
         ],
@@ -441,21 +488,21 @@ class LandingPage extends StatelessWidget {
     );
   }
 
-  // ================= HOW IT WORKS =================
+  // HOW IT WORKS
 
   Widget _howItWorks() {
     final steps = [
       (
         'Daftar / Masuk dengan Peran',
-        'Pilih peran Alumni ITS atau Mahasiswa Aktif.'
+        'Pilih peran Alumni ITS atau Mahasiswa Aktif.',
       ),
       (
         'Lengkapi Portofolio',
-        'Isi profil, keahlian, dan status karier.'
+        'Isi profil, keahlian, dan status karier.',
       ),
       (
         'Bangun Koneksi Nyata',
-        'Ajukan referral atau jadwalkan sesi mentoring.'
+        'Ajukan referral atau jadwalkan sesi mentoring.',
       ),
     ];
 
@@ -536,7 +583,7 @@ class LandingPage extends StatelessWidget {
     );
   }
 
-  // ================= PRIVACY =================
+  // PRIVACY
 
   Widget _privacy(BuildContext context) {
     return Container(
@@ -596,7 +643,10 @@ class LandingPage extends StatelessWidget {
               ),
               child: const Text(
                 'Mulai Eksplorasi Sekarang',
-                style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600),
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),
@@ -605,13 +655,15 @@ class LandingPage extends StatelessWidget {
     );
   }
 
-  // ================= FOOTER =================
+  // FOOTER
 
   Widget _footer() {
     return Container(
       padding: const EdgeInsets.only(top: 14, bottom: 5),
       decoration: const BoxDecoration(
-        border: Border(top: BorderSide(color: dividerColor)),
+        border: Border(
+          top: BorderSide(color: dividerColor),
+        ),
       ),
       child: const Column(
         children: [
@@ -627,12 +679,18 @@ class LandingPage extends StatelessWidget {
           Text(
             'Tentang   Ketentuan   Privasi   Kontak',
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 8, color: secondaryText),
+            style: TextStyle(
+              fontSize: 8,
+              color: secondaryText,
+            ),
           ),
           SizedBox(height: 5),
           Text(
             '© 2026 KonekSI Alumni Platform',
-            style: TextStyle(fontSize: 8, color: secondaryText),
+            style: TextStyle(
+              fontSize: 8,
+              color: secondaryText,
+            ),
           ),
         ],
       ),
@@ -640,13 +698,11 @@ class LandingPage extends StatelessWidget {
   }
 }
 
-// ================= METRIC ITEM =================
-
 class _Metric extends StatelessWidget {
+  const _Metric(this.number, this.label);
+
   final String number;
   final String label;
-
-  const _Metric(this.number, this.label);
 
   @override
   Widget build(BuildContext context) {
